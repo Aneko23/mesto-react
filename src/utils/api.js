@@ -78,9 +78,9 @@ class Api {
     .then(this._getResponseData)
   }
 
-  clickLike(id) {
+  clickLike(id, isLiked) {
     return fetch(`${this._adress}/v1/${this._cohortId}/cards/likes/${id}`, {
-        method: 'PUT',
+        method: (isLiked) ? 'DELETE' : 'PUT',
         headers: {
             authorization: this._token,
             'Content-Type': 'application/json',
@@ -88,18 +88,6 @@ class Api {
     })
     .then(this._getResponseData)
   }
-
-  deleteLike(id) {
-    return fetch(`${this._adress}/v1/${this._cohortId}/cards/likes/${id}`, {
-        method: 'DELETE',
-        headers: {
-            authorization: this._token,
-            'Content-Type': 'application/json',
-          }
-    })
-    .then(this._getResponseData)
-  }
-  
 
   changeUserAvatar(avatar) {
     return fetch(`${this._adress}/v1/${this._cohortId}/users/me/avatar`, {
