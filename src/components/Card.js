@@ -17,7 +17,7 @@ export default function Card(props) {
     }
 
     function handleDeleteClick() {
-        props.onCardDelete(props.card);
+        props.openDeletePopup(props.card);
     }
 
     return (
