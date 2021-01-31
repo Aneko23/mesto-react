@@ -14,12 +14,21 @@ export default function App() {
   const [onClose, closeAllPopups] = React.useState(true);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({isPopupOpened: false});
-  const [currentUser, setCurrentUser] = React.useState('');
+  const [currentUser, setCurrentUser] = React.useState([]);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const [removedCard, setRemovedCard] = React.useState('');
+
+  React.useEffect(() => {
+    if (onClose) {
+      setEditAvatarPopupOpen(false);
+      setEditProfilePopupOpen(false);
+      setAddPlacePopupOpen(false);
+      setDeleteCardPopupOpen(false);
+    }
+  }, [onClose])
 
 //Получаю гелерею с сохранёнными карточками
     React.useEffect(() => {
@@ -30,15 +39,19 @@ export default function App() {
       .catch((error) => {
           console.log(`Возникла ошибка: ${error}`)
       })
-    }, [cards]);
+    }, []);
   
 //Функция для клика по сердечку
     function handleCardLike(card) {
       const isLiked = card.likes.some(i => i._id === currentUser._id);
-      api.clickLike(card._id, isLiked).then((newCard) => {
+      api.clickLike(card._id, isLiked)
+      .then((newCard) => {
         const newCards = cards.map((c) => c._id === card._id ? newCard : c);
         setCards(newCards);
-      });
+      })
+      .catch((error) => {
+        console.log(`Возникла ошибка: ${error}`)
+    })
   }
   
 //Функция удаления карточки
@@ -46,12 +59,12 @@ export default function App() {
           api.deleteCard(card._id)
             .then(() => {
                 const newCards = cards.filter((c) => c.owner._id === card.owner._id);
+                handleCloseAllPopups();
                 return newCards;
             })
             .catch((error) => {
               console.log(`Возникла ошибка: ${error}`)
-          })
-            .finally(() => handleCloseAllPopups());
+          });
       }
 
 //Получаю данные пользователя с сервера
@@ -102,22 +115,19 @@ export default function App() {
 //Функция для закрытия всех попапов
   function handleCloseAllPopups() {
     closeAllPopups(true);
-    setAddPlacePopupOpen(false);
-    setEditProfilePopupOpen(false);
-    setEditAvatarPopupOpen(false);
-    setSelectedCard(false);
+    setSelectedCard({});
   }
 
 //Функция для обновления данных о пользователе
   function handleUpdateUser(data) {
     api.setUserProfile(data.name, data.about)
     .then(res => {
-      setCurrentUser(res)
+      setCurrentUser(res);
+      handleCloseAllPopups();
     })
     .catch((err) => {
         console.log(`Возникла ошибка: ${err}`)
-    })
-    .finally(() => handleCloseAllPopups());
+    });
   }
 
 //Функция добавления новой карточки
@@ -125,10 +135,9 @@ export default function App() {
     api.addCard(newCard.name, newCard.link)
         .then(card => {
             setCards([card, ...cards]);
-
+            handleCloseAllPopups();
     })
-    .catch((err) => console.log (`Возникла ошибка: ${err}`))
-    .finally(() => handleCloseAllPopups());
+    .catch((err) => console.log (`Возникла ошибка: ${err}`));
   }
 
 //Функция для обновления аватара
@@ -136,11 +145,11 @@ export default function App() {
     api.changeUserAvatar(card.avatar)
     .then(res => {
       setCurrentUser(res);
+      handleCloseAllPopups();
     })
     .catch(err => {
       console.log(`Возникла ошибка: ${err}`)
-    })
-    .finally(() => handleCloseAllPopups());
+    });
   }
 
   return (

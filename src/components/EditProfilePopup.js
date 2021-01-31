@@ -35,6 +35,7 @@ export default function EditProfilePopup(props) {
         }
     }, [currentUser]);
 
+//Обновляю поля после закрытия попапа
     React.useEffect(() => {
         if (props.onClose) {
             setName(currentUser.name);

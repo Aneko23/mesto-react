@@ -3,6 +3,13 @@ import PopupWithForm from './PopupWithForm';
 
 export default function EditAvatarPopup(props) {
 
+  //Обновляю поля после закрытия попапа
+  React.useEffect(() => {
+    if (props.onClose) {
+      linkRef.current.value = '';
+    }
+}, [props.onClose])
+
     const linkRef = React.useRef();
 
     function handleSubmit(e) {

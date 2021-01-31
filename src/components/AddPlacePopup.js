@@ -5,6 +5,7 @@ export default function AddPlacePopup(props) {
     const [place, setPlace] = React.useState('');
     const [url, setUrl] = React.useState('');
 
+//Обновляю поля после закрытия попапа
     React.useEffect(() => {
         if (props.onClose) {
             setPlace('');
@@ -12,14 +13,17 @@ export default function AddPlacePopup(props) {
         }
     }, [props.onClose])
 
+//Изменяю значение поля "название"
     function changePlace(e) {
         setPlace(e.target.value);
     }
 
+//Изменяю значение поля "ссылка"
     function changeLink(e) {
         setUrl(e.target.value);
     }
 
+//Обработчик события
     function handleSubmit(e) {
         e.preventDefault();
         props.onAddPlace({

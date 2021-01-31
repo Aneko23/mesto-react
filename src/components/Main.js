@@ -1,11 +1,8 @@
 import React from "react";
 import Pencil from '../images/Edit-pencil.svg';
-//import PopupWithForm from '../components/PopupWithForm';
 import ImagePopup from './ImagePopup';
-//import api from '../utils/api';
 import Card from '../components/Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-//import { CurrentCardContext } from '../contexts/CurrentCardContext';
 
 export default function Main(props) {
     const [isOnMouseOver, setOnMouseOver] = React.useState(false);
