@@ -19,7 +19,7 @@ export default function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpen] = React.useState(false);
   const [cards, setCards] = React.useState([]);
-  const [removedCard, setRemovedCard] = React.useState('');
+  const [removedCard, setRemovedCard] = React.useState([]);
 
   React.useEffect(() => {
     if (onClose) {
@@ -59,6 +59,14 @@ export default function App() {
           api.deleteCard(card._id)
             .then(() => {
                 const newCards = cards.filter((c) => c.owner._id === card.owner._id);
+                //Обновляю список карточек
+                api.getCards()
+                .then(res => {
+                  setCards(res)
+                })
+                .catch((error) => {
+                   console.log(`Возникла ошибка: ${error}`)
+                })
                 handleCloseAllPopups();
                 return newCards;
             })
